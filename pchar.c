@@ -37,7 +37,6 @@ void mod(stack_t **head, unsigned int counter)
 		f_stack(*head);
 		exit(EXIT_FAILURE);
 	}
-
 	res = current->next->n % current->n;
 	current->next->n = res;
 	*head = current->next;
