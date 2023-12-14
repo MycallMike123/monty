@@ -2,40 +2,145 @@
 
 
 /**
- * push - Adds a node to the stack
+ * handle_push - Adds a node to the stack
  * @head: Pointer to the head of the stack
  * @counter: Line number in the Monty bytecode file
 */
 
-void push(stack_t **head, unsigned int counter)
+void handle_push(stack_t **head, unsigned int counter)
 {
 	int value, b, flag;
 
 	b = 0;
 	flag = 0;
-	if (bus.arg)
+	if (line.arg)
 	{
-		if (bus.arg[0] == '-')
-			j++;
-		for (; bus.arg[j] != '\0'; j++)
+		if (line.arg[0] == '-')
+			b++;
+		for (; line.arg[b] != '\0'; b++)
 		{
-			if (bus.arg[j] > 57 || bus.arg[j] < 48)
-				flag = 1; }
+			if (line.arg[b] > 57 || line.arg[b] < 48)
+				flag = 1;
+		}
 		if (flag == 1)
 		{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-			fclose(bus.file);
-			free(bus.content);
-			free_stack(*head);
-			exit(EXIT_FAILURE); }}
+			fclose(line.file);
+			free(line.cont);
+			f_stack(*head);
+			exit(EXIT_FAILURE);
+		}
+	}
 	else
 	{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
 		exit(EXIT_FAILURE); }
-	n = atoi(bus.arg);
-	if (bus.lifi == 0)
-		addnode(head, n);
+	n = atoi(line.arg);
+
+	if (line.flag_c == 0)
+	{
+		_addnode(head, n);
+	}
 	else
-		addqueue(head, n);
+	{
+		_addqueue(head, n);
+	}
+}
+
+/**
+ * handle_pall - Prints the elements of the stack
+ * @head: Pointer to the head of the stack
+ * @counter: Unused parameter
+ */
+
+void handle_pall(stack_t **head, unsigned int counter)
+{
+	stack_t *current;
+	(void)counter;
+
+	current = *head;
+	if (current == NULL)
+	{
+		return;
+	}
+	while (current)
+	{
+		printf("%d\n", current->n);
+		current = current->next;
+	}
+}
+
+/**
+ * handle_pint - Prints the value at the top of the stack
+ * @head: Pointer to the head of the stack
+ * @counter: Line number in the Monty bytecode file
+ */
+
+void handle_pint(stack_t **head, unsigned int counter)
+{
+	if (*head == NULL)
+	{
+		fprintf(stderr, "L%u: can't pint, stack empty\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+	printf("%d\n", (*head)->n);
+}
+
+/**
+ * handle_pop - Removes the top element from the stack
+ * @head: Pointer to the head of the stack
+ * @counter: Line number in the Monty bytecode file
+ */
+
+void handle_pop(stack_t **head, unsigned int counter)
+{
+	stack_t *temp;
+
+	if (*head == NULL)
+	{
+		fprintf(stderr, "L%d: can't pop an empty stack\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+	temp = *head;
+	*head = temp->next;
+	free(temp);
+}
+
+/**
+ * handle_swap - Swaps the top two elements of the stack
+ * @head: Pointer to the head of the stack
+ * @counter: Line number in the Monty bytecode file
+ */
+
+void handle_swap(stack_t **head, unsigned int counter)
+{
+	stack_t *current;
+	int len, temp;
+
+	len = 0;
+	current = *head;
+	while (current)
+	{
+		current = current->next;
+		len++;
+	}
+	if (len < 2)
+	{
+		fprintf(stderr, "L%d: can't swap, stack too short\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+	current = *head;
+	temp = current->n;
+	current->n = current->next->n;
+	current->next->n = temp;
 }
