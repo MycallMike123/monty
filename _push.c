@@ -36,15 +36,15 @@ void handle_push(stack_t **head, unsigned int counter)
 		free(line.cont);
 		f_stack(*head);
 		exit(EXIT_FAILURE); }
-	n = atoi(line.arg);
+	value = atoi(line.arg);
 
 	if (line.flag_c == 0)
 	{
-		_addnode(head, n);
+		_addnode(head, value);
 	}
 	else
 	{
-		_addqueue(head, n);
+		_addqueue(head, value);
 	}
 }
 
