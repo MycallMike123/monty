@@ -18,7 +18,7 @@ int exec(char *cont, stack_t **stack, unsigned int counter, FILE *file)
 				{"add", add},
 				{"nop", handle_nop},
 				{"sub", sub},
-				{"div", div},
+				{"div", _div},
 				{"mul", mul},
 				{"mod", mod},
 				{"pchar", pchar},
