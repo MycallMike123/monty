@@ -1,3 +1,5 @@
+#include "monty.h"
+
 /**
  * mod - Computes the remainder of the division of the
  * second top element by the top element of the stack
@@ -37,7 +39,7 @@ void mod(stack_t **head, unsigned int counter)
 	}
 
 	res = current->next->n % current->n;
-	h->next->n = res;
+	current->next->n = res;
 	*head = current->next;
 	free(current);
 }
