@@ -41,6 +41,45 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
+/**
+ * struct line_s - variables -args, file, line content
+ * @arg: value
+ * @file: pointer to monty file
+ * @cont: line content
+ * @flag_c: flag change stack <-> queue
+ * Description: carries values through the program
+ */
+typedef struct line_s
+{
+	char *arg;
+	FILE *file;
+	char *cont;
+	int flag_c;
+}  line_t;
+
 line_t line = {NULL, NULL, NULL, 0};
+
+int exec(char *cont, stack_t **stack, unsigned int counter, FILE *file);
+void f_stack(stack_t *head);
+void add(stack_t **head, unsigned int counter);
+void handle_nop(stack_t **head, unsigned int counter);
+void sub(stack_t **head, unsigned int counter);
+void _div(stack_t **head, unsigned int counter);
+void mul(stack_t **head, unsigned int counter);
+void mod(stack_t **head, unsigned int counter);
+void pchar(stack_t **head, unsigned int counter);
+void pstr(stack_t **head, unsigned int counter);
+void rotl(stack_t **head, __attribute__((unused)) unsigned int counter);
+void rotr(stack_t **head, __attribute__((unused)) unsigned int counter);
+void handle_push(stack_t **head, unsigned int counter);
+void handle_pall(stack_t **head, unsigned int counter);
+void handle_pint(stack_t **head, unsigned int counter);
+void handle_pop(stack_t **head, unsigned int counter);
+void handle_swap(stack_t **head, unsigned int counter);
+void _stack(stack_t **head, unsigned int counter);
+void _queue(stack_t **head, unsigned int counter);
+void _addqueue(stack_t **head, int n);
+void _addnode(stack_t **head, int n);
+
 
 #endif

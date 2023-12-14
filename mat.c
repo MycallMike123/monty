@@ -75,12 +75,12 @@ void sub(stack_t **head, unsigned int counter)
 }
 
 /**
- * div - divides the top two elements of the stack.
+ * _div - divides the top two elements of the stack.
  * @head:  Pointer to the head of the stack
  * @counter: Line number in the Monty bytecode file
 */
 
-void div(stack_t **head, unsigned int counter)
+void _div(stack_t **head, unsigned int counter)
 {
 	stack_t *current;
 	int nodes = 0, res;
