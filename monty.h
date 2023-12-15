@@ -28,6 +28,9 @@ typedef struct stack_s
 } stack_t;
 
 
+extern stack_t *head;
+typedef void (*_op)(stack_t **, unsigned int);
+
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
@@ -43,46 +46,32 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/**
- * struct line_s - variables -args, file, line content
- * @arg: value
- * @file: pointer to monty file
- * @cont: line content
- * @flag_c: flag change stack <-> queue
- * Description: carries values through the program
- */
-typedef struct line_s
-{
-	char *arg;
-	FILE *file;
-	char *cont;
-	int flag_c;
-}  line_t;
-
-extern line_t line;
-
-int exec(char *cont, stack_t **stack, unsigned int counter, FILE *file);
-void f_stack(stack_t *head);
-void add(stack_t **head, unsigned int counter);
-void handle_nop(stack_t **head, unsigned int counter);
-void sub(stack_t **head, unsigned int counter);
-void _div(stack_t **head, unsigned int counter);
-void mul(stack_t **head, unsigned int counter);
-void mod(stack_t **head, unsigned int counter);
-void pchar(stack_t **head, unsigned int counter);
-void pstr(stack_t **head, unsigned int counter);
-void rotl(stack_t **head, __attribute__((unused)) unsigned int counter);
-void rotr(stack_t **head, __attribute__((unused)) unsigned int counter);
-void handle_push(stack_t **head, unsigned int counter);
-void handle_pall(stack_t **head, unsigned int counter);
-void handle_pint(stack_t **head, unsigned int counter);
-void handle_pop(stack_t **head, unsigned int counter);
-void handle_swap(stack_t **head, unsigned int counter);
-void _stack(stack_t **head, unsigned int counter);
-void _queue(stack_t **head, unsigned int counter);
-void _addqueue(stack_t **head, int n);
-void _addnode(stack_t **head, int n);
-ssize_t custom_getline(char **content, size_t *size, FILE *file);
-
+void call_fun(_op, char *, char *, int, int);
+void f_open(char *file_name);
+void f_stack(void);
+void error_(int error_code, ...);
+void _error(int error_code, ...);
+void str_error(int error_code, ...);
+void add(stack_t **, unsigned int);
+void handle_nop(stack_t **, unsigned int);
+void sub(stack_t **, unsigned int);
+void _div(stack_t **, unsigned int);
+void mul(stack_t **, unsigned int);
+void mod(stack_t **, unsigned int);
+void pchar(stack_t **, unsigned int);
+void pstr(stack_t **, unsigned int);
+void rotl(stack_t **, unsigned int);
+void rotr(stack_t **, unsigned int);
+stack_t *handle_push(int n);
+void handle_pint(stack_t **, unsigned int);
+void handle_pop(stack_t **, unsigned int);
+void handle_swap(stack_t **, unsigned int);
+void _stack(stack_t **, unsigned int);
+int _queue(char *buffer, int line_number, int format);
+void _addqueue(stack_t **, unsigned int);
+void _addnode(stack_t **, unsigned int);
+void rd_file(FILE *);
+int _len(FILE *);
+void f_find(char *, char *, int, int);
 
 #endif
