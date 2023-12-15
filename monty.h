@@ -27,10 +27,6 @@ typedef struct stack_s
 	struct stack_s *next;
 } stack_t;
 
-
-extern stack_t *first;
-typedef void (*_op)(stack_t **, unsigned int);
-
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
@@ -46,7 +42,10 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-void call_fun(_op, char *, char *, int, int);
+extern stack_t *first;
+typedef void (*_op)(stack_t **, unsigned int);
+
+void f_call(_op, char *, char *, int, int);
 void f_open(char *file_name);
 void f_stack(void);
 void error_(int error_code, ...);
@@ -71,7 +70,6 @@ int _queue(char *buffer, int line_number, int format);
 void _addqueue(stack_t **, unsigned int);
 void _addnode(stack_t **, unsigned int);
 void rd_file(FILE *);
-int _len(FILE *);
-void f_find(char *, char *, int, int);
+void exec(char *, char *, int, int);
 
 #endif
