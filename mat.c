@@ -8,16 +8,30 @@
 
 void add(stack_t **head, unsigned int counter)
 {
-	int res;
+	stack_t *current;
+	int len = 0, res;
 
-	if (head == NULL || *head == NULL || (*head)->next == NULL)
-		_error(8, counter, "add");
+	current = *head;
+	while (current)
+	{
+		current = current->next;
+		len++;
+	}
 
-	(*head) = (*head)->next;
-	res = (*head)->n + (*head)->prev->n;
-	(*head)->n = res;
-	free((*head)->prev);
-	(*head)->prev = NULL;
+	if (len < 2)
+	{
+		fprintf(stderr, "L%d: can't add, stack too short\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+
+	current = *head;
+	res = current->n + current->next->n;
+	current->next->n = res;
+	*head = current->next;
+	free(current);
 }
 
 /**
@@ -39,18 +53,25 @@ void handle_nop(stack_t **head, unsigned int counter)
  */
 void sub(stack_t **head, unsigned int counter)
 {
-	int res;
+	stack_t *current;
+	int res, nodes;
 
-	if (head == NULL || *head == NULL || (*head)->next == NULL)
-
-		_error(8, counter, "sub");
-
-
-	(*head) = (*head)->next;
-	res = (*head)->n - (*head)->prev->n;
-	(*head)->n = res;
-	free((*head)->prev);
-	(*head)->prev = NULL;
+	current = *head;
+	for (nodes = 0; current != NULL; nodes++)
+		current = current->next;
+	if (nodes < 2)
+	{
+		fprintf(stderr, "L%d: can't sub, stack too short\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+	current = *head;
+	res = current->next->n - current->n;
+	current->next->n = res;
+	*head = current->next;
+	free(current);
 }
 
 /**
@@ -61,16 +82,38 @@ void sub(stack_t **head, unsigned int counter)
 
 void _div(stack_t **head, unsigned int counter)
 {
-	int res;
+	stack_t *current;
+	int nodes = 0, res;
 
-	if (head == NULL || *head == NULL || (*head)->next == NULL)
-		_error(8, counter, "div");
+	current = *head;
+	while (current)
+	{
+		current = current->next;
+		nodes++;
+	}
+	if (nodes < 2)
+	{
+		fprintf(stderr, "L%d: can't div, stack too short\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
 
-	(*head) = (*head)->next;
-	res = (*head)->n / (*head)->prev->n;
-	(*head)->n = res;
-	free((*head)->prev);
-	(*head)->prev = NULL;
+	current = *head;
+	if (current->n == 0)
+	{
+		fprintf(stderr, "L%d: division by zero\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+
+	res = current->next->n / current->n;
+	current->next->n = res;
+	*head = current->next;
+	free(current);
 }
 
 /**
@@ -80,14 +123,27 @@ void _div(stack_t **head, unsigned int counter)
 */
 void mul(stack_t **head, unsigned int counter)
 {
-	int res;
+	stack_t *current;
+	int nodes = 0, res;
 
-	if (head == NULL || *head == NULL || (*head)->next == NULL)
-		_error(8, counter, "mul");
+	current = *head;
+	while (current)
+	{
+		current = current->next;
+		nodes++;
+	}
+	if (nodes < 2)
+	{
+		fprintf(stderr, "L%d: can't mul, stack too short\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
 
-	(*head) = (*head)->next;
-	res = (*head)->n * (*head)->prev->n;
-	(*head)->n = res;
-	free((*head)->prev);
-	(*head)->prev = NULL;
+	current = *head;
+	res = current->next->n * current->n;
+	current->next->n = res;
+	*head = current->next;
+	free(current);
 }
