@@ -56,7 +56,7 @@ void rd_file(FILE *file_descriptor)
 	size_t len = 0;
 
 	type = 0;
-	for (counter = 1; getline(&buffer, &len, file_descriptor) != -1; counter++)
+	for (counter = 1; custom_getline(&buffer, &len, file_descriptor) != -1; counter++)
 	{
 		type = _queue(buffer, counter, type);
 	}
