@@ -72,5 +72,6 @@ void _addqueue(stack_t **, unsigned int);
 void _addnode(stack_t **, unsigned int);
 void rd_file(FILE *);
 void exec(char *, char *, int, int);
+ssize_t custom_getline(char **content, size_t *size, FILE *file);
 
 #endif
