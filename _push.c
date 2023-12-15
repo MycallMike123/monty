@@ -7,7 +7,7 @@
  * Return: A pointer to the node
 */
 
-int handle_push(int n)
+stack_t *handle_push(int n)
 {
 	stack_t *n_node;
 
