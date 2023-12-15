@@ -55,7 +55,7 @@ int _queue(char *buffer, int counter, int type)
 
 	if (buffer == NULL)
 	{
-		err(4);
+		error_(4);
 	}
 
 	op_code = strtok(buffer, delim);
