@@ -82,7 +82,7 @@ ssize_t custom_getline(char **content, size_t *size, FILE *file)
 {
 	char *buffer = NULL;
 	size_t bufsize = 0;
-	ssize_t nread;
+	ssize_t nread = 0;
 	int c;
 
 	if (!content || !size || !file)
@@ -91,31 +91,34 @@ ssize_t custom_getline(char **content, size_t *size, FILE *file)
 	{ buffer = malloc(BUFFER_SIZE);
 		if (!buffer)
 			return (-1);
-		bufsize = BUFFER_SIZE;
+		bufsize = BUFFER_SIZE; }
 		else
 		{ buffer = *content;
 			bufsize = *size; }
-	nread = 0;
 
 	while (1)
 	{
-		int c = fgetc(file);
+		c = fgetc(file);
 
 		if (c == EOF)
+		{
 			if (nread == 0)
 				return (-1); /* No characters read */
 			break;
+		}
 
-		if (nread >= bufsize - 1)
+		if ((size_t)nread >= bufsize - 1)
+		{
 			bufsize += BUFFER_SIZE;
 			buffer = realloc(buffer, bufsize);
 			if (!buffer)
 				return (-1);
-	}
+		}
 
 		buffer[nread++] = c;
 		if (c == '\n')
-			break; }
+			break;
+	}
 	buffer[nread] = '\0';
 	*content = buffer;
 	*size = bufsize;
