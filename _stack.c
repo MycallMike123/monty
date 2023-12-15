@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	while (line_rd > 0)
 	{
 		cont = NULL;
-		line_rd = getline(&cont, &size, file);
+		line_rd = custom_getline(&cont, &size, file);
 		line.cont = cont;
 		counter++;
 
