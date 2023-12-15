@@ -63,4 +63,49 @@ void rd_file(FILE *file_descriptor)
 	free(buffer);
 }
 
+/**
+ * custom_getline - reads a line from a file stream
+ * @content: pointer to the buffer where the line will be stored
+ * @size: pointer to the size of the buffer
+ * @file: file stream to read from
+ * Return: the number of characters read (including newline), or -1 on failure
+ */
 
+ssize_t custom_getline(char **content, size_t *size, FILE *file)
+{
+	char *buffer = NULL;
+	size_t bufsize = 0;
+	ssize_t nread = 0;
+	int c;
+
+	if (!content || !size || !file)
+		return (-1);
+	while (1)
+	{
+		c = fgetc(file);
+		if (c == EOF)
+		{
+			if (nread == 0)
+			{
+				free(buffer);
+				return (-1);
+			}
+			break;
+		}
+		if ((size_t)nread >= bufsize - 1)
+		{
+			bufsize += BUFFER_SIZE;
+			buffer = realloc(buffer, bufsize);
+			if (!buffer)
+				return (-1);
+		}
+
+		buffer[nread++] = c;
+		if (c == '\n')
+			break;
+	}
+	buffer[nread] = '\0';
+	*content = buffer;
+	*size = bufsize;
+	return (nread);
+}
