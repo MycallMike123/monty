@@ -9,19 +9,38 @@
 
 void mod(stack_t **head, unsigned int counter)
 {
-	int res;
+	stack_t *current;
+	int nodes = 0, res;
 
-	if (head == NULL || *head == NULL || (*head)->next == NULL)
-		_error(8, counter, "mod");
+	current = *head;
+	while (current)
+	{
+		current = current->next;
+		nodes++;
+	}
 
-	if ((*head)->n == 0)
-		_error(9, counter);
+	if (nodes < 2)
+	{
+		fprintf(stderr, "L%d: can't mod, stack too short\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
 
-	(*head) = (*head)->next;
-	res = (*head)->n % (*head)->prev->n;
-	(*head)->n = res;
-	free((*head)->prev);
-	(*head)->prev = NULL;
+	current = *head;
+	if (current->n == 0)
+	{
+		fprintf(stderr, "L%d: division by zero\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+	res = current->next->n % current->n;
+	current->next->n = res;
+	*head = current->next;
+	free(current);
 }
 
 /**
@@ -32,94 +51,105 @@ void mod(stack_t **head, unsigned int counter)
 
 void pchar(stack_t **head, unsigned int counter)
 {
-	int characters;
+	stack_t *current;
 
-	if (head == NULL || *head == NULL)
-		str_error(11, counter);
+	current = *head;
+	if (!current)
+	{
+		fprintf(stderr, "L%d: can't pchar, stack empty\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
+	if (current->n > 127 || current->n < 0)
+	{
+		fprintf(stderr, "L%d: can't pchar, value out of range\n", counter);
+		fclose(line.file);
+		free(line.cont);
+		f_stack(*head);
+		exit(EXIT_FAILURE);
+	}
 
-	characters = (*head)->n;
-	if (characters < 0 || characters > 127)
-		str_error(10, counter);
-	printf("%c\n", characters);
+	printf("%c\n", current->n);
 }
 
 /**
  * pstr - rints the string starting at the top of the stack, followed by \n
  * @head: Pointer to the head of the stack
- * @integer: Line number in the Monty bytecode file
+ * @counter: Line number in the Monty bytecode file
 */
 
-void pstr(stack_t **head, __attribute__((unused))unsigned int integer)
+void pstr(stack_t **head, unsigned int counter)
 {
-	int characters;
-	stack_t *res;
+	stack_t *current;
+	(void)counter;
 
-	if (head == NULL || *head == NULL)
+	current = *head;
+	while (current)
 	{
-		printf("\n");
-		return;
-	}
-
-	res = *head;
-	while (res != NULL)
-	{
-		characters = res->n;
-		if (characters <= 0 || characters > 127)
+		if (current->n > 127 || current->n <= 0)
 		{
 			break;
 		}
-		printf("%c", characters);
-		res = res->next;
+
+		printf("%c", current->n);
+		current = current->next;
 	}
+
 	printf("\n");
 }
 
 /**
  * rotl- Rotates the stack to the top
  * @head: Pointer to the head of the stack
- * @integer: Line number in the Monty bytecode file
+ * @counter: Line number in the Monty bytecode file
  */
-void rotl(stack_t **head,  __attribute__((unused)) unsigned int integer)
+void rotl(stack_t **head,  __attribute__((unused)) unsigned int counter)
 {
+	stack_t *temp = *head;
 	stack_t *res;
 
-	if (head == NULL || *head == NULL || (*head)->next == NULL)
+	if (*head == NULL || (*head)->next == NULL)
 	{
 		return;
 	}
 
-	res = *head;
-	while (res->next != NULL)
-		res = res->next;
-
-	res->next = *head;
-	(*head)->prev = res;
-	*head = (*head)->next;
-	(*head)->prev->next = NULL;
-	(*head)->prev = NULL;
+	res = (*head)->next;
+	res->prev = NULL;
+	while (temp->next != NULL)
+	{
+		temp = temp->next;
+	}
+	temp->next = *head;
+	(*head)->next = NULL;
+	(*head)->prev = temp;
+	(*head) = res;
 }
 
 /**
  * rotr- Rotates the stack to the bottom
  * @head: Pointer to the head of the stack
- * @integer: Line number in the Monty bytecode file
+ * @counter: Line number in the Monty bytecode file
  */
-void rotr(stack_t **head, __attribute__((unused)) unsigned int integer)
+void rotr(stack_t **head, __attribute__((unused)) unsigned int counter)
 {
-	stack_t *res;
+	stack_t *temp;
 
-	if (head == NULL || *head == NULL || (*head)->next == NULL)
+	temp = *head;
+	if (*head == NULL || (*head)->next == NULL)
 	{
 		return;
 	}
 
-	res = *head;
-	while (res->next != NULL)
-		res = res->next;
+	while (temp->next)
+	{
+		temp = temp->next;
+	}
 
-	res->next = *head;
-	res->prev->next = NULL;
-	res->prev = NULL;
-	(*head)->prev = res;
-	(*head) = res;
+	temp->next = *head;
+	temp->prev->next = NULL;
+	temp->prev = NULL;
+	(*head)->prev = temp;
+	(*head) = temp;
 }
