@@ -80,6 +80,7 @@ void _stack(stack_t **head, unsigned int counter);
 void _queue(stack_t **head, unsigned int counter);
 void _addqueue(stack_t **head, int n);
 void _addnode(stack_t **head, int n);
+ssize_t custom_getline(char **content, size_t *size, FILE *file);
 
 
 #endif
