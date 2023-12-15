@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "monty.h"
 
 line_t line = {NULL, NULL, NULL, 0};
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
 	while (line_rd > 0)
 	{
 		cont = NULL;
-		line_rd = custom_getline(&cont, &size, file);
+		line_rd = getline(&cont, &size, file);
 		line.cont = cont;
 		counter++;
 
