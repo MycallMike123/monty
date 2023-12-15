@@ -1,7 +1,5 @@
 #include "monty.h"
 
-line_t line = {NULL, NULL, NULL, 0};
-
 /**
  * main - Monty code interpreter
  * @argc: Number of command-line arguments
@@ -11,44 +9,13 @@ line_t line = {NULL, NULL, NULL, 0};
 
 int main(int argc, char *argv[])
 {
-	char *cont;
-	FILE *file;
-	size_t size = 0;
-	ssize_t line_rd = 1;
-	stack_t *stack = NULL;
-	unsigned int counter = 0;
-
 	if (argc != 2)
 	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-
-	file = fopen(argv[1], "r");
-	line.file = file;
-	if (!file)
-	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-		exit(EXIT_FAILURE);
-	}
-	while (line_rd > 0)
-	{
-		cont = NULL;
-		line_rd = custom_getline(&cont, &size, file);
-		line.cont = cont;
-		counter++;
-
-		if (line_rd > 0)
-		{
-			exec(cont, &stack, counter, file);
-		}
-
-		free(cont);
-	}
-
-	f_stack(stack);
-	fclose(file);
-
+	f_open(argv[1]);
+	f_stack();
 	return (0);
 }
 
@@ -59,86 +26,108 @@ int main(int argc, char *argv[])
 */
 void _stack(stack_t **head, unsigned int counter)
 {
-	(void)head;
-	(void)counter;
-	line.flag_c = 0;
+	stack_t *res;
+
+	(void) counter;
+	if (head == NULL)
+		exit(EXIT_FAILURE);
+	res = *head;
+	while (res != NULL)
+	{
+		printf("%d\n", res->n);
+		res = res->next;
+	}
 }
 
 /**
- * _queue - Sets the stack mode (FIFO)
- * @head: Pointer to the head of the stack
+ * _queue - Separates each line into tokens to determine
+ * @buffer: line from the file
+ * @type: the format
  * @counter: Line number in the Monty bytecode file
+ * Return: 0 if stack, 1 if queue
 */
 
-void _queue(stack_t **head, unsigned int counter)
+int _queue(char *buffer, int counter, int type)
 {
-	(void)head;
-	(void)counter;
-	line.flag_c = 1;
+	char *op_code;
+	char *value;
+	const char *delim = "\n ";
+
+	if (buffer == NULL)
+	{
+		err(4);
+	}
+
+	op_code = strtok(buffer, delim);
+	if (op_code == NULL)
+	{
+		return (type);
+	}
+	value = strtok(NULL, delim);
+
+	if (strcmp(op_code, "stack") == 0)
+	{
+		return (0);
+	}
+	if (strcmp(op_code, "queue") == 0)
+	{
+		return (1);
+	}
+
+	exec(op_code, value, counter, type);
+
+	return (type);
 }
 
 /**
  * _addqueue - Adds a node to the tail of the stack
- * @head: Pointer to the head of the stack
+ * @n_node: Pointer to the head of the stack
  * @n: New value to be added to the stack
 */
 
-void _addqueue(stack_t **head, int n)
+void _addqueue(stack_t **n_node, __attribute__((unused))unsigned int n)
 {
-	stack_t *n_node, *res;
+	stack_t *res;
 
-	res = *head;
-	n_node = malloc(sizeof(stack_t));
+	if (n_node == NULL || *n_node == NULL)
+	{
+		exit(EXIT_FAILURE);
+	}
+	if (first == NULL)
+	{
+		first = *n_node;
+		return;
+	}
+	res = first;
+	while (res->next != NULL)
+		res = res->next;
 
-	if (n_node == NULL)
-	{
-		printf("Error\n");
-	}
+	res->next = *n_node;
+	(*n_node)->prev = res;
 
-	n_node->n = n;
-	n_node->next = NULL;
-	if (res)
-	{
-		while (res->next)
-			res = res->next;
-	}
-	if (!res)
-	{
-		*head = n_node;
-		n_node->prev = NULL;
-	}
-	else
-	{
-		res->next = n_node;
-		n_node->prev = res;
-	}
 }
 
 /**
  * _addnode - Adds a node to the head of the stack
- * @head: Pointer to the head of the stack
+ * @n_node: Pointer to the head of the stack
  * @n: New value to be added to the stack
 */
 
-void _addnode(stack_t **head, int n)
+void _addnode(stack_t **n_node, __attribute__((unused))unsigned int n)
 {
-	stack_t *n_node, *res;
+	stack_t *res;
 
-	res = *head;
-	n_node = malloc(sizeof(stack_t));
-
-	if (n_node == NULL)
+	if (n_node == NULL || *n_node == NULL)
 	{
-		printf("Error\n");
-		exit(0);
+		exit(EXIT_FAILURE);
 	}
-	if (res)
+	if (first == NULL)
 	{
-		res->prev = n_node;
+		first = *n_node;
+		return;
 	}
-
-	n_node->n = n;
-	n_node->next = *head;
-	n_node->prev = NULL;
-	*head = n_node;
+	res = first;
+	first = *n_node;
+	first->next = res;
+	res->prev = first;
 }

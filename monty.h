@@ -28,7 +28,7 @@ typedef struct stack_s
 } stack_t;
 
 
-extern stack_t *head;
+extern stack_t *first;
 typedef void (*_op)(stack_t **, unsigned int);
 
 /**
