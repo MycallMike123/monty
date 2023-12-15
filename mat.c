@@ -15,7 +15,7 @@ void add(stack_t **head, unsigned int counter)
 
 	(*head) = (*head)->next;
 	res = (*head)->n + (*head)->prev->n;
-	(*stack)->n = res;
+	(*head)->n = res;
 	free((*head)->prev);
 	(*head)->prev = NULL;
 }
