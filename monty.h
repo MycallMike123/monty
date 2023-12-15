@@ -59,7 +59,7 @@ typedef struct line_s
 	int flag_c;
 }  line_t;
 
-line_t line = {NULL, NULL, NULL, 0};
+extern line_t line;
 
 int exec(char *cont, stack_t **stack, unsigned int counter, FILE *file);
 void f_stack(stack_t *head);
