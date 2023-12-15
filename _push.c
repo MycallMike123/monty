@@ -91,6 +91,6 @@ void f_open(char *file_name)
 	if (file_name == NULL || file_descriptor == NULL)
 		error_(2, file_name);
 
-	read_file(file_descriptor);
+	rd_file(file_descriptor);
 	fclose(file_descriptor);
 }
