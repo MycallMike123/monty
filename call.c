@@ -43,3 +43,24 @@ void f_call(_op func, char *op_code, char *value, int n, int type)
 		func(&first, n);
 	}
 }
+
+/**
+ * rd_file - reads a file
+ * @file_descriptor: pointer to file descriptor
+ */
+
+void rd_file(FILE *file_descriptor)
+{
+	int counter, type;
+	char *buffer = NULL;
+	size_t len = 0;
+
+	type = 0;
+	for (counter = 1; getline(&buffer, &len, file_descriptor) != -1; counter++)
+	{
+		type = _queue(buffer, counter, type);
+	}
+	free(buffer);
+}
+
+
