@@ -1,5 +1,7 @@
 #include "monty.h"
 
+line_t line = {NULL, NULL, NULL, 0};
+
 /**
  * main - Monty code interpreter
  * @argc: Number of command-line arguments
