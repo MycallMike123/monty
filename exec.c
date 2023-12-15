@@ -49,7 +49,6 @@ void exec(char *opcode, char *value, int n, int type)
 /**
  * f_stack - Frees nodes in the stack.
  */
-
 void f_stack(void)
 {
 	stack_t *res;
