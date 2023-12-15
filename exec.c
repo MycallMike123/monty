@@ -54,15 +54,15 @@ void f_stack(void)
 {
 	stack_t *res;
 
-	if (head == NULL)
+	if (first == NULL)
 	{
 		return;
 	}
 
-	while (head != NULL)
+	while (first != NULL)
 	{
-		res = head;
-		head = head->next;
+		res = first;
+		first = first->next;
 		free(res);
 	}
 }
